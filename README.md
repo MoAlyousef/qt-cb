@@ -213,8 +213,11 @@ impl InputExt for QBox<QLineEdit> {
 ```toml
 [dependencies]
 qt-cb = "0.1.0"
-# the rest of the dependencies or rust-qt
+# other rust-qt packages
+qt_core = "0.5.0"
+qt_widgets = "0.5.0"
+# other deps
 ```
 
 ## Requirements
-This crate has the same requirements of rust-qt.
+This crate has the same requirements as rust-qt.
