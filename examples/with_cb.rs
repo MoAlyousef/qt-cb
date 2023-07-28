@@ -1,8 +1,8 @@
+use qt_cb::prelude::*;
 use qt_core::qs;
 use qt_widgets::{
     QApplication, QCheckBox, QHBoxLayout, QLineEdit, QPushButton, QVBoxLayout, QWidget,
 };
-use qt_cb::prelude::ButtonExt;
 
 fn main() {
     QApplication::init(|_| unsafe {
@@ -12,6 +12,9 @@ fn main() {
         let vbox = QVBoxLayout::new_1a(&win);
         let ed = QLineEdit::new();
         ed.set_placeholder_text(&qs("Enter name"));
+        ed.on_text_changed(|_ed, txt| {
+            println!("current lineedit text: {}", txt.to_std_string());
+        });
         vbox.add_widget(&ed);
         let hbox = QHBoxLayout::new_0a();
         vbox.add_layout_1a(&hbox);

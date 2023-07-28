@@ -1,5 +1,5 @@
-use cpp_core::{Ptr, StaticUpcast};
-use qt_core::{qs, slot, QBox, QObject, SlotNoArgs, SlotOfBool};
+use cpp_core::{Ptr, Ref, StaticUpcast};
+use qt_core::{qs, slot, QBox, QObject, QString, SlotNoArgs, SlotOfBool, SlotOfQString};
 use qt_widgets::{
     QApplication, QCheckBox, QHBoxLayout, QLineEdit, QPushButton, QVBoxLayout, QWidget,
 };
@@ -49,6 +49,9 @@ impl Form {
     }
 
     unsafe fn init(self: &Rc<Self>) {
+        self.ed
+            .text_changed()
+            .connect(&self.slot_on_lineedit_text_changed());
         self.button
             .pressed()
             .connect(&self.slot_on_button_pressed());
@@ -69,6 +72,11 @@ impl Form {
             self.checkbox.text().to_std_string(),
             if checked { "" } else { "un" }
         );
+    }
+
+    #[slot(SlotOfQString)]
+    unsafe fn on_lineedit_text_changed(self: &Rc<Self>, txt: Ref<QString>) {
+        println!("current lineedit text: {}", txt.to_std_string());
     }
 }
 

@@ -27,3 +27,25 @@ extern "C" {
         data: *mut ::std::os::raw::c_void,
     );
 }
+extern "C" {
+    pub fn QAbstractButton_onToggled(
+        btn: *mut QAbstractButton,
+        arg1: ::std::option::Option<
+            unsafe extern "C" fn(
+                arg1: *mut QAbstractButton,
+                arg2: ::std::os::raw::c_int,
+                arg3: *mut ::std::os::raw::c_void,
+            ),
+        >,
+        data: *mut ::std::os::raw::c_void,
+    );
+}
+extern "C" {
+    pub fn QAbstractButton_onReleased(
+        btn: *mut QAbstractButton,
+        arg1: ::std::option::Option<
+            unsafe extern "C" fn(arg1: *mut QAbstractButton, arg2: *mut ::std::os::raw::c_void),
+        >,
+        data: *mut ::std::os::raw::c_void,
+    );
+}
