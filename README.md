@@ -3,15 +3,58 @@
 Provides several convenience closure taking methods to [rust-qt](https://github.com/rust-qt/ritual). 
 
 ## Rationale
-Even though Qt's signal and slot mechanism is quite powerful and allows for very dynamic code and programming model, it's not always needed, especially for simple functionality or simple debugging.
+Even though Qt's signal and slot mechanism is quite powerful and allows for very dynamic code and programming model, defining slots, especially on the Rust side, can be verbose and filled with boilerplate. 
+You might just need to quickly debug something or add some simple functionality to a widget without having to go through the ritual of defining slots.
 
-In both C++ and Rust, defining signals and slots can become verbose at times, and even Qt itself supports closures on the C++ side.
+For example, compare the following 2 programs. Both programs do the same thing, the first uses this crate, and uses closures without having to define slots or deriving SlotNoArgs/SlotOfBool/SlotOfQString etc. The second doesn't use closures, it defines slots for the required signals, it requires importing SlotNoArgs/SlotOfBool/SlotOfQString boilerplate, and using the correct Slot type.
 
-For example, compare the following 2 programs for readability and writing ergonomics. Both programs do the same thing, the first doesn't use closures, it defines slots for the required signals.
-The second program, uses this crate, and uses closures without having to define slots in a separate object, nor does it require the derive SlotNoArgs/SlotOfBool/SlotOfQString boilerplate.
+The first program (with closures):
+```rust,no_run
+// with closures
+use qt_cb::prelude::*;
+use qt_core::qs;
+use qt_widgets::{
+    QApplication, QCheckBox, QHBoxLayout, QLineEdit, QPushButton, QVBoxLayout, QWidget,
+};
 
-The first program (no closures):
-```rust
+fn main() {
+    QApplication::init(|_| unsafe {
+        QApplication::set_style_q_string(&qs("Fusion"));
+        let win = QWidget::new_0a();
+        win.set_fixed_size_2a(400, 300);
+        let vbox = QVBoxLayout::new_1a(&win);
+        let ed = QLineEdit::new();
+        ed.set_placeholder_text(&qs("Enter name"));
+        ed.on_text_changed(|_ed, txt| {
+            println!("current lineedit text: {}", txt.to_std_string());
+        });
+        vbox.add_widget(&ed);
+        let hbox = QHBoxLayout::new_0a();
+        vbox.add_layout_1a(&hbox);
+        let checkbox = QCheckBox::new();
+        hbox.add_widget(&checkbox);
+        checkbox.set_text(&qs("Check me!"));
+        checkbox.on_clicked(|b, checked| {
+            println!(
+                "{} is {}checked",
+                b.text().to_std_string(),
+                if checked { "" } else { "un" }
+            );
+        });
+        let button = QPushButton::new();
+        hbox.add_widget(&button);
+        button.set_text(&qs("Greet!"));
+        button.on_pressed(move |_b| {
+            println!("Hello {}", ed.text().to_std_string());
+        });
+        win.show();
+        QApplication::exec()
+    })
+}
+```
+
+The second program (no closures):
+```rust,no_run
 // no closures
 use cpp_core::{Ptr, Ref, StaticUpcast};
 use qt_core::{qs, slot, QBox, QObject, QString, SlotNoArgs, SlotOfBool, SlotOfQString};
@@ -103,52 +146,8 @@ fn main() {
 }
 ```
 
-The second program (with closures):
-```rust
-// with closures
-use qt_cb::prelude::*;
-use qt_core::qs;
-use qt_widgets::{
-    QApplication, QCheckBox, QHBoxLayout, QLineEdit, QPushButton, QVBoxLayout, QWidget,
-};
-
-fn main() {
-    QApplication::init(|_| unsafe {
-        QApplication::set_style_q_string(&qs("Fusion"));
-        let win = QWidget::new_0a();
-        win.set_fixed_size_2a(400, 300);
-        let vbox = QVBoxLayout::new_1a(&win);
-        let ed = QLineEdit::new();
-        ed.set_placeholder_text(&qs("Enter name"));
-        ed.on_text_changed(|_ed, txt| {
-            println!("current lineedit text: {}", txt.to_std_string());
-        });
-        vbox.add_widget(&ed);
-        let hbox = QHBoxLayout::new_0a();
-        vbox.add_layout_1a(&hbox);
-        let checkbox = QCheckBox::new();
-        hbox.add_widget(&checkbox);
-        checkbox.set_text(&qs("Check me!"));
-        checkbox.on_clicked(|b, checked| {
-            println!(
-                "{} is {}checked",
-                b.text().to_std_string(),
-                if checked { "" } else { "un" }
-            );
-        });
-        let button = QPushButton::new();
-        hbox.add_widget(&button);
-        button.set_text(&qs("Greet!"));
-        button.on_pressed(move |_b| {
-            println!("Hello {}", ed.text().to_std_string());
-        });
-        win.show();
-        QApplication::exec()
-    })
-}
-```
 Notice the:
-```rust
+```rust,ignore
     ed.on_text_changed(|_ed, txt| {
         println!("current lineedit text: {}", txt.to_std_string());
     });
@@ -197,7 +196,18 @@ Instead of:
 ```
 
 ## Implementation details
-qt-cb uses functionality already provided in rust-qt. It instantiates the necessary Slot, and passes a closure directly to it. It also passes the widget itself into the closure, so you get access to the widget as well in your closure.
+qt-cb uses functionality already provided in rust-qt. It instantiates the necessary Slot, and passes a closure directly to it. It also passes the widget itself into the closure, so you get access to the widget as well in your closure:
+```rust,ignore
+impl InputExt for QBox<QLineEdit> {
+    unsafe fn on_text_changed<F: FnMut(Ptr<QLineEdit>, Ref<QString>) + 'static>(&self, mut cb: F) {
+        let wid: Ptr<QLineEdit> = self.cast_into();
+        wid.text_changed()
+            .connect(&SlotOfQString::new(wid, move |b| {
+                cb(wid, b);
+            }));
+    }
+}
+```
 
 ## Usage
 ```toml
