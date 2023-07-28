@@ -1,0 +1,1 @@
+bindgen src/button.h -o src/buttonsys.rs
