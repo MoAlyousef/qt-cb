@@ -1,6 +1,8 @@
+#![doc = include_str!("../README.md")]
+
 mod button;
 mod input;
-mod text;
-mod utils;
 mod menu;
 pub mod prelude;
+mod text;
+mod utils;

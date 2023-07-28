@@ -164,7 +164,7 @@ Notice the:
 ```
 
 Instead of:
-```rust
+```rust,ignore
     self.ed
         .text_changed()
         .connect(&self.slot_on_lineedit_text_changed());
@@ -199,11 +199,11 @@ Instead of:
 qt-cb uses functionality already provided in rust-qt. It instantiates the necessary Slot, and passes a closure directly to it. It also passes the widget itself into the closure, so you get access to the widget as well in your closure:
 ```rust,ignore
 impl InputExt for QBox<QLineEdit> {
-    unsafe fn on_text_changed<F: FnMut(Ptr<QLineEdit>, Ref<QString>) + 'static>(&self, mut cb: F) {
-        let wid: Ptr<QLineEdit> = self.cast_into();
+    unsafe fn on_text_changed<F: FnMut(&Self, Ref<QString>) + 'static>(&self, mut cb: F) {
+        let wid = self.as_ptr();
         wid.text_changed()
             .connect(&SlotOfQString::new(wid, move |b| {
-                cb(wid, b);
+                cb(&QBox::new(wid), b);
             }));
     }
 }
