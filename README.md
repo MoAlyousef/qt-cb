@@ -1,18 +1,18 @@
 # qt-cb
 
-Provides several convenience callback functions to [rust-qt](https://github.com/rust-qt/ritual). 
+Provides several convenience closure taking methods to [rust-qt](https://github.com/rust-qt/ritual). 
 
 ## Rationale
-Even though Qt's signal and slot mechanism is quite powerful and allows for very dynamic code and programming model, it's not always needed, especially for simple functionality.
+Even though Qt's signal and slot mechanism is quite powerful and allows for very dynamic code and programming model, it's not always needed, especially for simple functionality or simple debugging.
 
-In both C++ and Rust, defining signals and slots can become verbose at times, and even Qt itself supports lambda functions on the C++ side.
+In both C++ and Rust, defining signals and slots can become verbose at times, and even Qt itself supports closures on the C++ side.
 
-For example, compare the following 2 programs for readability and writing ergonomics. Both programs do the same thing, the first doesn't use callbacks, it defines slots for the required signals.
-The second program, uses this crate, and uses callbacks without having to define slots in a separate object, nor does it require the derive SlotNoArgs/SlotOfBool/SlotOfQString boilerplate.
+For example, compare the following 2 programs for readability and writing ergonomics. Both programs do the same thing, the first doesn't use closures, it defines slots for the required signals.
+The second program, uses this crate, and uses closures without having to define slots in a separate object, nor does it require the derive SlotNoArgs/SlotOfBool/SlotOfQString boilerplate.
 
-The first program (no callbacks):
+The first program (no closures):
 ```rust
-// no callbacks
+// no closures
 use cpp_core::{Ptr, Ref, StaticUpcast};
 use qt_core::{qs, slot, QBox, QObject, QString, SlotNoArgs, SlotOfBool, SlotOfQString};
 use qt_widgets::{
@@ -103,9 +103,9 @@ fn main() {
 }
 ```
 
-The second program (with callbacks):
+The second program (with closures):
 ```rust
-// with callbacks
+// with closures
 use qt_cb::prelude::*;
 use qt_core::qs;
 use qt_widgets::{
@@ -196,6 +196,9 @@ Instead of:
     }
 ```
 
+## Implementation details
+qt-cb uses functionality already provided in rust-qt. It instantiates the necessary Slot, and passes a closure directly to it. It also passes the widget itself into the closure, so you get access to the widget as well in your closure.
+
 ## Usage
 ```toml
 [dependencies]
@@ -204,14 +207,4 @@ qt-cb = "0.1.0"
 ```
 
 ## Requirements
-This crate requires a C++17 compiler, and a qmake executable invokable from your shell (i.e in PATH).
-An installation of Qt5 (the same requirements for rust-qt basically). rust-qt also requires CMake.
-On linux, you can install Qt via your package manager (assuming debian):
-```bash
-sudo apt-get install -y qtbase5-dev libqt5widgets5
-```
-
-On Windows msys2/mingw64:
-```bash
-pacman -S $MINGW_PACKAGE_PREFIX-qt5-base
-```
+This crate has the same requirements of rust-qt.

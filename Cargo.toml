@@ -1,5 +1,21 @@
-[workspace]
-members = [
-	"qt-cb",
-	"qt-cb-sys",
-]
+[package]
+name = "qt-cb"
+version = "0.1.1"
+edition = "2021"
+description = "Use closures in rust-qt!"
+repository = "https://github.com/MoAlyousef/qt-cb"
+documentation = "https://docs.rs/qt-cb"
+keywords = ["gui", "ui", "widgets", "bindings", "graphics"]
+categories = ["gui"]
+readme = "README.md"
+license = "MIT"
+
+[dependencies]
+cpp_core = "0.6.0"
+qt_widgets = "0.5.0"
+qt_core = "0.5.0"
+
+[dev-dependencies]
+cpp_core = "0.6.0"
+qt_gui = "0.5.0"
+qt_widgets = "0.5.0"
