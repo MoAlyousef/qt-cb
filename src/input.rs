@@ -2,6 +2,7 @@ use crate::prelude::InputExt;
 use cpp_core::{CastInto, Ptr, Ref};
 use qt_core::{QBox, QString, SlotNoArgs, SlotOfQString};
 use qt_widgets::QLineEdit;
+use crate::utils;
 
 macro_rules! impl_input_ext {
     ($name: ident) => {
@@ -10,17 +11,10 @@ macro_rules! impl_input_ext {
                 &self,
                 mut cb: F,
             ) {
-                let wid: Ptr<QLineEdit> = self.cast_into();
-                wid.text_changed()
-                    .connect(&SlotOfQString::new(wid, move |b| {
-                        cb(wid, b);
-                    }));
+                utils::on_signal_1a!(QLineEdit, self, text_changed, SlotOfQString, cb);
             }
             unsafe fn on_return_pressed<F: FnMut(Ptr<QLineEdit>) + 'static>(&self, mut cb: F) {
-                let wid: Ptr<QLineEdit> = self.cast_into();
-                wid.return_pressed().connect(&SlotNoArgs::new(wid, move || {
-                    cb(wid);
-                }));
+                utils::on_signal!(QLineEdit, self, return_pressed, cb);
             }
         }
     };
