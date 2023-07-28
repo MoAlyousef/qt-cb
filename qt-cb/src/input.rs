@@ -1,6 +1,6 @@
-use crate::inputsys as wrap;
 use crate::prelude::InputExt;
 use cpp_core::{CastInto, Ptr, Ref};
+use qt_cb_sys::input as wrap;
 use qt_core::{QBox, QString};
 use qt_widgets::QLineEdit;
 

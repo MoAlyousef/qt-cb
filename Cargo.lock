@@ -273,11 +273,18 @@ dependencies = [
 name = "qt-cb"
 version = "0.1.0"
 dependencies = [
- "cc",
  "cpp_core",
+ "qt-cb-sys",
  "qt_core",
  "qt_gui",
  "qt_widgets",
+]
+
+[[package]]
+name = "qt-cb-sys"
+version = "0.1.0"
+dependencies = [
+ "cc",
 ]
 
 [[package]]

@@ -1,6 +1,6 @@
-use crate::buttonsys as wrap;
 use crate::prelude::ButtonExt;
 use cpp_core::{CastInto, Ptr};
+use qt_cb_sys::button as wrap;
 use qt_core::QBox;
 use qt_widgets::{QAbstractButton, QCheckBox, QPushButton, QRadioButton};
 
