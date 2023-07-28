@@ -8,16 +8,16 @@ macro_rules! impl_btn_ext {
     ($name: ident) => {
         impl ButtonExt for QBox<$name> {
             unsafe fn on_clicked<F: FnMut(Ptr<QAbstractButton>, bool) + 'static>(&self, mut cb: F) {
-                utils::on_signal_1a!(QAbstractButton, self, clicked, SlotOfBool, cb);
+                utils::connect_1a!(QAbstractButton, self, clicked, SlotOfBool, cb);
             }
             unsafe fn on_pressed<F: FnMut(Ptr<QAbstractButton>) + 'static>(&self, mut cb: F) {
-                utils::on_signal!(QAbstractButton, self, pressed, cb);
+                utils::connect_0a!(QAbstractButton, self, pressed, cb);
             }
             unsafe fn on_toggled<F: FnMut(Ptr<QAbstractButton>, bool) + 'static>(&self, mut cb: F) {
-                utils::on_signal_1a!(QAbstractButton, self, toggled, SlotOfBool, cb);
+                utils::connect_1a!(QAbstractButton, self, toggled, SlotOfBool, cb);
             }
             unsafe fn on_released<F: FnMut(Ptr<QAbstractButton>) + 'static>(&self, mut cb: F) {
-                utils::on_signal!(QAbstractButton, self, released, cb);
+                utils::connect_0a!(QAbstractButton, self, released, cb);
             }
         }
     };

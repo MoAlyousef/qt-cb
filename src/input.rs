@@ -11,10 +11,10 @@ macro_rules! impl_input_ext {
                 &self,
                 mut cb: F,
             ) {
-                utils::on_signal_1a!(QLineEdit, self, text_changed, SlotOfQString, cb);
+                utils::connect_1a!(QLineEdit, self, text_changed, SlotOfQString, cb);
             }
             unsafe fn on_return_pressed<F: FnMut(Ptr<QLineEdit>) + 'static>(&self, mut cb: F) {
-                utils::on_signal!(QLineEdit, self, return_pressed, cb);
+                utils::connect_0a!(QLineEdit, self, return_pressed, cb);
             }
         }
     };
