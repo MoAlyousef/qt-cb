@@ -4,7 +4,7 @@ use qt_core::{QBox, SlotNoArgs, SlotOfBool};
 use qt_widgets::{QAbstractButton, QCheckBox, QPushButton, QRadioButton};
 use crate::utils;
 
-macro_rules! impl_btn_ext {
+macro_rules! impl_ext {
     ($name: ident) => {
         impl ButtonExt for QBox<$name> {
             unsafe fn on_clicked<F: FnMut(Ptr<QAbstractButton>, bool) + 'static>(&self, mut cb: F) {
@@ -23,7 +23,7 @@ macro_rules! impl_btn_ext {
     };
 }
 
-impl_btn_ext!(QCheckBox);
-impl_btn_ext!(QPushButton);
-impl_btn_ext!(QRadioButton);
-impl_btn_ext!(QAbstractButton);
+impl_ext!(QCheckBox);
+impl_ext!(QPushButton);
+impl_ext!(QRadioButton);
+impl_ext!(QAbstractButton);

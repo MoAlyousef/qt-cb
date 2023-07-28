@@ -4,7 +4,7 @@ use qt_core::{QBox, QString, SlotNoArgs, SlotOfQString};
 use qt_widgets::QLineEdit;
 use crate::utils;
 
-macro_rules! impl_input_ext {
+macro_rules! impl_ext {
     ($name: ident) => {
         impl InputExt for QBox<$name> {
             unsafe fn on_text_changed<F: FnMut(Ptr<QLineEdit>, Ref<QString>) + 'static>(
@@ -20,4 +20,4 @@ macro_rules! impl_input_ext {
     };
 }
 
-impl_input_ext!(QLineEdit);
+impl_ext!(QLineEdit);
