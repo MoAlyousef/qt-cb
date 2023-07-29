@@ -60,7 +60,7 @@ qt_widgets = "0.5.0"
 
 In your Rust source code, `use qt_cb::prelude::*;`:
 
-```rust
+```rust,no_run
 use qt_cb::prelude::*;
 use qt_core::qs;
 use qt_widgets::{
@@ -174,12 +174,12 @@ impl Form {
     }
 
     #[slot(SlotNoArgs)]
-    unsafe fn connect_button_pressed(self: &Rc<Self>) {
+    unsafe fn on_button_pressed(self: &Rc<Self>) {
         println!("Hello {}", self.ed.text().to_std_string());
     }
 
     #[slot(SlotOfBool)]
-    unsafe fn connect_checkbox_clicked(self: &Rc<Self>, checked: bool) {
+    unsafe fn on_checkbox_clicked(self: &Rc<Self>, checked: bool) {
         println!(
             "{} is {}checked",
             self.checkbox.text().to_std_string(),
@@ -188,7 +188,7 @@ impl Form {
     }
 
     #[slot(SlotOfQString)]
-    unsafe fn connect_lineedit_text_changed(self: &Rc<Self>, txt: Ref<QString>) {
+    unsafe fn on_lineedit_text_changed(self: &Rc<Self>, txt: Ref<QString>) {
         println!("current lineedit text: {}", txt.to_std_string());
     }
 }
@@ -202,7 +202,7 @@ fn main() {
 ```
 
 2- The second way of defining slots, is to instantiate Slot objects, which correspond to the arguments provided by the Signal, i.e SlotOfBool, SlotOfQString etc. The closure doesn't expose the widget in the args, so it needs to be captured manually (either using an Rc smart pointer, or by getting the `Ptr<Widget>`):
-```rust
+```rust,no_run
 use qt_core::{qs, SlotNoArgs, SlotOfBool, SlotOfQString};
 use qt_widgets::{
     QApplication, QCheckBox, QHBoxLayout, QLineEdit, QPushButton, QVBoxLayout, QWidget,

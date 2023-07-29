@@ -61,12 +61,12 @@ impl Form {
     }
 
     #[slot(SlotNoArgs)]
-    unsafe fn connect_button_pressed(self: &Rc<Self>) {
+    unsafe fn on_button_pressed(self: &Rc<Self>) {
         println!("Hello {}", self.ed.text().to_std_string());
     }
 
     #[slot(SlotOfBool)]
-    unsafe fn connect_checkbox_clicked(self: &Rc<Self>, checked: bool) {
+    unsafe fn on_checkbox_clicked(self: &Rc<Self>, checked: bool) {
         println!(
             "{} is {}checked",
             self.checkbox.text().to_std_string(),
@@ -75,7 +75,7 @@ impl Form {
     }
 
     #[slot(SlotOfQString)]
-    unsafe fn connect_lineedit_text_changed(self: &Rc<Self>, txt: Ref<QString>) {
+    unsafe fn on_lineedit_text_changed(self: &Rc<Self>, txt: Ref<QString>) {
         println!("current lineedit text: {}", txt.to_std_string());
     }
 }
