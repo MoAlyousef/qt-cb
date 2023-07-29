@@ -1,6 +1,6 @@
 [package]
 name = "qt-cb"
-version = "0.1.4"
+version = "0.1.5"
 edition = "2021"
 description = "Use closures in rust-qt!"
 repository = "https://github.com/MoAlyousef/qt-cb"

@@ -6,7 +6,10 @@ use qt_widgets::{QAction, QMenu, QMenuBar, SlotOfQAction};
 macro_rules! impl_ext {
     ($name: ident) => {
         impl MenuExt for QBox<$name> {
-            unsafe fn on_triggered<F: FnMut(&Self, QPtr<QAction>) + 'static>(&self, mut cb: F) {
+            unsafe fn connect_triggered<F: FnMut(&Self, QPtr<QAction>) + 'static>(
+                &self,
+                mut cb: F,
+            ) {
                 utils::connect_1a!($name, self, triggered, SlotOfQAction, cb);
             }
         }

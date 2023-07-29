@@ -1,5 +1,4 @@
-use qt_cb::prelude::*;
-use qt_core::qs;
+use qt_core::{qs, SlotNoArgs, SlotOfBool, SlotOfQString};
 use qt_widgets::{
     QApplication, QCheckBox, QHBoxLayout, QLineEdit, QPushButton, QVBoxLayout, QWidget,
 };
@@ -12,28 +11,31 @@ fn main() {
         let vbox = QVBoxLayout::new_1a(&win);
         let ed = QLineEdit::new();
         ed.set_placeholder_text(&qs("Enter name"));
-        ed.connect_text_changed(|_ed, txt| {
+        ed.text_changed().connect(&SlotOfQString::new(&ed, |txt| {
             println!("current lineedit text: {}", txt.to_std_string());
-        });
+        }));
         vbox.add_widget(&ed);
         let hbox = QHBoxLayout::new_0a();
         vbox.add_layout_1a(&hbox);
         let checkbox = QCheckBox::new();
         hbox.add_widget(&checkbox);
         checkbox.set_text(&qs("Check me!"));
-        checkbox.connect_clicked(|b, checked| {
-            println!(
-                "{} is {}checked",
-                b.text().to_std_string(),
-                if checked { "" } else { "un" }
-            );
-        });
+        checkbox.clicked().connect(&SlotOfBool::new(&checkbox, {
+            let checkbox = checkbox.as_ptr();
+            move |checked| {
+                println!(
+                    "{} is {}checked",
+                    checkbox.text().to_std_string(),
+                    if checked { "" } else { "un" }
+                );
+            }
+        }));
         let button = QPushButton::new();
         hbox.add_widget(&button);
         button.set_text(&qs("Greet!"));
-        button.connect_pressed(move |_b| {
+        button.pressed().connect(&SlotNoArgs::new(&button, move || {
             println!("Hello {}", ed.text().to_std_string());
-        });
+        }));
         win.show();
         QApplication::exec()
     })
