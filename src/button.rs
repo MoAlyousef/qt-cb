@@ -7,16 +7,16 @@ macro_rules! impl_ext {
     ($name: ident) => {
         impl ButtonExt for QBox<$name> {
             unsafe fn connect_clicked<F: FnMut(&Self, bool) + 'static>(&self, mut cb: F) {
-                utils::connect_1a!(QAbstractButton, self, clicked, SlotOfBool, cb);
+                utils::connect_1a!(self, clicked, SlotOfBool, cb);
             }
             unsafe fn connect_pressed<F: FnMut(&Self) + 'static>(&self, mut cb: F) {
-                utils::connect_0a!(QAbstractButton, self, pressed, cb);
+                utils::connect_0a!(self, pressed, cb);
             }
             unsafe fn connect_toggled<F: FnMut(&Self, bool) + 'static>(&self, mut cb: F) {
-                utils::connect_1a!(QAbstractButton, self, toggled, SlotOfBool, cb);
+                utils::connect_1a!(self, toggled, SlotOfBool, cb);
             }
             unsafe fn connect_released<F: FnMut(&Self) + 'static>(&self, mut cb: F) {
-                utils::connect_0a!(QAbstractButton, self, released, cb);
+                utils::connect_0a!(self, released, cb);
             }
         }
     };

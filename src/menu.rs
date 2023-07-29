@@ -10,7 +10,7 @@ macro_rules! impl_ext {
                 &self,
                 mut cb: F,
             ) {
-                utils::connect_1a!($name, self, triggered, SlotOfQAction, cb);
+                utils::connect_1a!(self, triggered, SlotOfQAction, cb);
             }
         }
     };
